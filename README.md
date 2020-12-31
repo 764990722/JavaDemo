@@ -8,6 +8,10 @@
 ## 框架说明
 ## pom.xml 注解框架、数据库框架、分页框架
 
+## 地址说明
+## 本地电脑访问 http://localhost:8080/ 或者 http://127.0.0.1:8080/  
+## 同一个网，外部访问需要获取IPV4端口  比如http://192.168.43.148:8080/
+
 ## 接口说明
 ## getUserInfo          测试接口，不需要数据库可访问 http://localhost:8080/getUserInfo
 ## addUser              注册接口
