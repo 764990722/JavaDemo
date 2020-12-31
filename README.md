@@ -1,6 +1,10 @@
 
 ## 实战Java接口学习之路
 
+## 需要用到mysql  8.0.22 winx64安装配置方法图文 教程地址：http://note.youdao.com/noteshare?id=bc87cf96e09dbeaeba6ca094591da455
+
+## 参考学习博客，在此感谢：https://blog.csdn.net/weixin_44135121/category_9285585.html
+
 ## 框架说明
 ## pom.xml 注解框架、数据库框架、分页框架
 
@@ -114,10 +118,6 @@
 ![](image/delete.jpg)
 ![](image/updateUser.jpg)
 ![](image/getUserPageList.jpg)
-
-## 需要用到mysql  8.0.22 winx64安装配置方法图文 教程地址：http://note.youdao.com/noteshare?id=bc87cf96e09dbeaeba6ca094591da455
-
-## 此demo参考学习：https://blog.csdn.net/weixin_44135121/category_9285585.html
       
 
   
