@@ -17,6 +17,7 @@
 ## updateUser           修改用户信息
 ## getUserPageList      分页，模糊查询
 
+![](image/menu.jpg)
 ![](image/mysql.jpg)
 ![](image/addUser.jpg)
 ![](image/login.jpg)
