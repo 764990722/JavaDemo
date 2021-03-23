@@ -1,10 +1,13 @@
 package com.example.demo.entity;
 
+import javax.persistence.Table;
+
 /**
  * Created by: PeaceJay
  * Created date: 2020/12/31.
  * Description: 用户模型
  */
+
 public class User {
     private int id;
     private String username;
