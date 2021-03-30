@@ -33,6 +33,9 @@
     <update id="updateUser"  parameterType="com.example.demo.entity.User">
         UPDATE `user`
         <trim prefix="SET" suffixOverrides=",">
+            <if test="null != user.phone and '' != user.phone">
+                phone = #{user.phone},
+            </if>
             <if test="null != user.username and '' != user.username">
                 username = #{user.username},
             </if>

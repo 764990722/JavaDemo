@@ -26,10 +26,12 @@ CREATE TABLE `user_log` (
 
 
 
-CREATE TABLE `user_type` (
+CREATE TABLE `user` (
                                 `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增主键',
                                 `username` varchar(100) DEFAULT NULL COMMENT '用户账号',
                                 `password` varchar(100) DEFAULT NULL COMMENT '用户密码',
                                 `phone` varchar(100) DEFAULT NULL COMMENT '用户手机号',
                                 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户信息表';
+
+

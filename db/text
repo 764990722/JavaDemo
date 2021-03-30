@@ -1,0 +1,17 @@
+#spring.datasource.url：数据库服务器地址。#useUnicode：使用的编码格式。useSSL=false跳过SSL验证
+spring.datasource.url=jdbc:mysql://127.0.0.1:3306/peacejay?useUnicode=true&useSSL=false&characterEncoding=utf8
+#spring.datasource.username：数据库登陆用户名。
+spring.datasource.username=root
+#spring.datasource.password：数据库登陆密码。
+spring.datasource.password=00109624
+#spring.datasource.driver-class-name：数据库连接驱动类。
+spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+#mybatis.mapper-locations：mybatis 映射扫描路径。
+mybatis.mapper-locations=classpath:mapper/*user_mapper.xml
+#mybatis.type-aliases-package：实体扫描路径。
+mybatis.type-aliases-package=com.example.demo.entity
+
+#修改字段内容
+UPDATE `peacejay`.`user` SET `phone` = '123456' WHERE `user`.`id` = 1;
+
+

@@ -67,13 +67,16 @@ public class UserController {
         List<User> users = service.queryByUsername(username);
         //2.判断是否有重复用户名
         if (users != null && users.size() > 0) {
+            System.out.println("注册失败，用户名重复,请更换");
             return new Response<>(false, "注册失败，用户名重复,请更换", -1, Collections.emptyMap());
         } else {
             int count = service.addUser(username, password, phone);
             User user = new User(username, password, phone);
             if (count > 0) {
+                System.out.println("注册成功" + user.getUsername());
                 return new Response<>(true, "注册成功", 200, user);
             } else {
+                System.out.println("注册失败" + user.getUsername());
                 return new Response<>(false, "注册失败", -1, Collections.emptyMap());
             }
         }
@@ -146,7 +149,9 @@ public class UserController {
     @RequestMapping(value = "/queryUser", method = RequestMethod.GET)
     public Response<Object> queryUser() {
         List<User> users = service.queryUser();
-        return new Response<>(true, "查询成功", 200, users);
+        Map<String, Object> map = new HashMap<>();
+        map.put("list", users);
+        return new Response<>(true, "查询成功", 200, map);
     }
 
     /**

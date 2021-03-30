@@ -12,8 +12,8 @@ import java.sql.Statement;
  * Created by: PeaceJay
  * Created date: 2020/03/23.
  * Description: 自动创建数据库与表
- * 使用前必须存在一个数据库edgecomput
- * 判断exchange是否存在  不存在就会去新建一个
+ * 使用前必须存在一个数据库userroot
+ * 判断peacejay是否存在  不存在就会去新建一个
  */
 @Component
 public class CommandLineRunnerImpl implements CommandLineRunner {
@@ -22,18 +22,18 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
     public void run(String... args) throws Exception {
         Class.forName("com.mysql.jdbc.Driver");//加载注册
         //一开始必须填一个已经存在的数据库
-        String url = "jdbc:mysql://127.0.0.1:3306/edgecomput?useUnicode=true&useSSL=false&characterEncoding=utf8";
-        Connection conn = DriverManager.getConnection(url, "root", "109624");//建立连接
+        String url = "jdbc:mysql://127.0.0.1:3306/userroot?useUnicode=true&useSSL=false&characterEncoding=utf8";
+        Connection conn = DriverManager.getConnection(url, "root", "00109624");//建立连接
         Statement stat = conn.createStatement();
-        String checkdatabase = "show databases like \"exchange\"";//判断数据库是否存在
-        String createdatabase = "create  database  exchange";//创建数据库
+        String checkdatabase = "show databases like \"peacejay\"";//判断数据库是否存在
+        String createdatabase = "create  database  peacejay";//创建数据库
         stat = (Statement) conn.createStatement();
         ResultSet resultSet = stat.executeQuery(checkdatabase);
         if (resultSet.next()) {
             //若数据库存在 新建一个表
-            System.out.println("exchange exist!");
-            url = "jdbc:mysql://127.0.0.1:3306/exchange?useUnicode=true&useSSL=false&characterEncoding=utf8";
-            conn = DriverManager.getConnection(url, "root", "109624");
+            System.out.println("peacejay exist!");
+            url = "jdbc:mysql://127.0.0.1:3306/peacejay?useUnicode=true&useSSL=false&characterEncoding=utf8";
+            conn = DriverManager.getConnection(url, "root", "00109624");
             stat = conn.createStatement();
 
             stat.executeUpdate("DROP TABLE IF EXISTS `user1`");
@@ -43,14 +43,16 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
                     "  `password` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户密码',\n" +
                     "  `phone` varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户手机号'\n" +
                     " ,PRIMARY KEY (`id`)) ENGINE = MyISAM CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;\n");
-
             stat.close();
             conn.close();
+
+
+
         } else {
             if (stat.executeUpdate(createdatabase) == 0)//若数据库不存在
                 //打开创建的数据库
-            url = "jdbc:mysql://127.0.0.1:3306/exchange?useUnicode=true&useSSL=false&characterEncoding=utf8";
-            conn = DriverManager.getConnection(url, "root", "109624");
+            url = "jdbc:mysql://127.0.0.1:3306/peacejay?useUnicode=true&useSSL=false&characterEncoding=utf8";
+            conn = DriverManager.getConnection(url, "root", "00109624");
             stat = conn.createStatement();
 
             //创建表 user
