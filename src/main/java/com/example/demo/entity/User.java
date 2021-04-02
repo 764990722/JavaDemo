@@ -1,7 +1,5 @@
 package com.example.demo.entity;
 
-import javax.persistence.Table;
-
 /**
  * Created by: PeaceJay
  * Created date: 2020/12/31.
@@ -13,13 +11,16 @@ public class User {
     private String username;
     private String password;
     private String phone;
+    private String herdImage;
 
-    public User() {}
+    public User() {
+    }
 
-    public User(String username, String password, String phone) {
+    public User(String username, String password, String phone, String herdImage) {
         this.username = username;
         this.password = password;
         this.phone = phone;
+        this.herdImage = herdImage;
     }
 
     public int getId() {
@@ -52,6 +53,14 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getHerdImage() {
+        return herdImage;
+    }
+
+    public void setHerdImage(String herdImage) {
+        this.herdImage = herdImage;
     }
 
     public String toString() {

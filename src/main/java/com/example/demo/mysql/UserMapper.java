@@ -26,5 +26,10 @@ public interface UserMapper {
 
     int updateUser(@Param("user") User user);
 
+    int updateHerd(@Param("user") User user);
+
     List<User> getUserPageList(String username);
+
+    List<User> queryImage();
+
 }

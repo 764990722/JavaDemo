@@ -3,6 +3,7 @@ package com.example.demo.serviceImpl;
 import com.example.demo.mysql.UserMapper;
 import com.example.demo.Service.UserService;
 import com.example.demo.entity.User;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,8 +30,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int addUser(String username, String password, String phone) {
-        User user = new User(username, password, phone);
+    public int addUser(User user) {
         return userMapper.addUser(user);
     }
 
@@ -49,6 +49,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.queryUser();
     }
 
+
     @Override
     public int updateUser(User user) {
         int count = 0;
@@ -61,9 +62,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public int updateHerd(User user) {
+        int count = 0;
+        try {
+            count = userMapper.updateHerd(user);
+        }catch (Exception err){
+            System.out.println(err);
+        }
+        return count;
+    }
+
+    @Override
     public List<User> getUserPageList(String username) {
         return userMapper.getUserPageList(username);
     }
+
+    @Override
+    public List<User> queryImage() {
+        return userMapper.queryImage();
+    }
+
+
 
 }
 

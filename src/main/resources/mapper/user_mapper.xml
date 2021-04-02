@@ -6,16 +6,16 @@
         <result column="username" jdbcType="VARCHAR" property="username"/>
         <result column="password" jdbcType="VARCHAR" property="password"/>
         <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="herdImage" jdbcType="VARCHAR" property="herdImage"/>
     </resultMap>
-    <!-- id sql语句唯一名    parameterType 传入sql语句的参数类型-->
-    <insert id="addUserInfo" parameterType="com.example.demo.entity.User">
-        INSERT INTO `user` VALUES (#{id},#{username}, #{password}, #{phone})
-    </insert>
+
 
     <!--  插入数据  -->
     <insert id="addUser" parameterType="com.example.demo.entity.User">
-        INSERT INTO `user` VALUES (#{id},#{username}, #{password}, #{phone})
+        INSERT INTO `user` VALUES (#{id},#{username}, #{password}, #{phone}, #{herdImage})
     </insert>
+
+
     <!--  根据账号查询  -->
     <select id="queryByUsername" resultType="com.example.demo.entity.User">
         SELECT * FROM `user` WHERE username = #{username}
@@ -46,10 +46,32 @@
         WHERE id = #{user.id}
     </update>
 
+    <!--  修改指定用户信息  -->
+    <update id="updateHerd"  parameterType="com.example.demo.entity.User">
+        UPDATE `user`
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="null != user.phone and '' != user.phone">
+                phone = #{user.phone},
+            </if>
+            <if test="null != user.username and '' != user.username">
+                username = #{user.username},
+            </if>
+            <if test="null != user.password and '' != user.password">
+                password = #{user.password},
+            </if>
+            <if test="null != user.herdImage and '' != user.herdImage">
+                herdImage = #{user.herdImage},
+            </if>
+        </trim>
+        WHERE id = #{user.id}
+    </update>
+
+
     <!--  分页查询用户信息,并通过账号模糊查询  -->
     <select id="getUserPageList" resultMap="BaseResultMap">
         select * from `user` WHERE username LIKE CONCAT('%',#{username,jdbcType=VARCHAR},'%')
     </select>
+
 
 </mapper>
 

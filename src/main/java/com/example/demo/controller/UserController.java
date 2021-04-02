@@ -8,7 +8,9 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.*;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -48,9 +50,10 @@ public class UserController {
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public Response<Object> register(@RequestBody User body) {
-        String username = body.getUsername();
-        String password = body.getPassword();
-        String phone = body.getPhone();
+        String username = body.getUsername() == null ? "" : body.getUsername();
+        String password = body.getPassword() == null ? "" : body.getPassword();
+        String phone = body.getPhone() == null ? "" : body.getPhone();
+        String herdImage = body.getHerdImage() == null ? "" : body.getHerdImage();
 
         //1.判断用户名、密码、手机号是否为空
         if (phone != null && phone.length() == 0) {
@@ -70,13 +73,13 @@ public class UserController {
             System.out.println("注册失败，用户名重复,请更换");
             return new Response<>(false, "注册失败，用户名重复,请更换", -1, Collections.emptyMap());
         } else {
-            int count = service.addUser(username, password, phone);
-            User user = new User(username, password, phone);
+            User bean = new User(username, password, phone, herdImage);
+            int count = service.addUser(bean);
             if (count > 0) {
-                System.out.println("注册成功" + user.getUsername());
-                return new Response<>(true, "注册成功", 200, user);
+                System.out.println("注册成功" + username);
+                return new Response<>(true, "注册成功", 200, bean);
             } else {
-                System.out.println("注册失败" + user.getUsername());
+                System.out.println("注册失败" + password);
                 return new Response<>(false, "注册失败", -1, Collections.emptyMap());
             }
         }
@@ -155,25 +158,6 @@ public class UserController {
     }
 
     /**
-     * 改
-     * 修改指定用户账号和密码
-     */
-    @RequestMapping(value = "/updateUser", method = RequestMethod.POST)
-    public Response<Object> updateUser(@RequestBody User user) {
-        int id = user.getId();
-        if (id != 0) {
-            int count = service.updateUser(user);
-            if (count > 0) {
-                return new Response<>(true, "修改成功", 200, user);
-            } else {
-                return new Response<>(false, "修改失败", -1, Collections.emptyMap());
-            }
-        } else {
-            return new Response<>(false, "请传入用户id", -1, Collections.emptyMap());
-        }
-    }
-
-    /**
      * 查分页
      * 分页查询用户
      */
@@ -191,5 +175,109 @@ public class UserController {
 
         return new Response<>(true, "查询成功", 200, map);
     }
+
+
+    /**
+     * 查全部
+     * 查询所有图片
+     */
+    @RequestMapping(value = "/queryImage", method = RequestMethod.GET)
+    public Response<Object> queryImage() {
+        List<User> users = service.queryImage();
+        Map<String, Object> map = new HashMap<>();
+        map.put("list", users);
+        return new Response<>(true, "查询成功", 200, map);
+    }
+
+
+    /**
+     * 修改用户资料 - 带表单头像
+     */
+    @RequestMapping(value = "/updateUser", method = RequestMethod.POST)
+    public Response<Object> updateUser(@RequestBody User user) {
+        try {
+            User body = new User();
+            body.setId(user.getId());
+            body.setUsername(user.getUsername() == null ? "" : user.getUsername());
+            body.setPassword(user.getPassword() == null ? "" : user.getPassword());
+            body.setPhone(user.getPhone() == null ? "" : user.getPhone());
+
+            //返回数据 并保存值到数据库
+            int count = service.updateUser(body);
+            if (count > 0) {
+                return new Response<>(true, "修改成功", 200, body);
+            } else {
+                return new Response<>(true, "修改失败", -102, Collections.emptyMap());
+            }
+        } catch (Exception e) {
+            return new Response<>(true, "修改失败", -103, Collections.emptyMap());
+        }
+    }
+
+
+    /**
+     * 修改用户资料 - 带表单头像
+     * + @Param + @RequestParamz组合  就不能用 @RequestBody
+     */
+    @RequestMapping(value = "/updateHerd", method = RequestMethod.POST)
+    public Response<Object> updateHerd(@Param("id") String id,
+                                       @Param("username") String username,
+                                       @Param("password") String password,
+                                       @Param("phone") String phone,
+                                       @RequestParam("file") MultipartFile file_data) {
+
+        try {
+            User body = new User();
+            body.setId(Integer.parseInt(id == null ? "-1" : id));
+            body.setUsername(username == null ? "" : username);
+            body.setPassword(password == null ? "" : password);
+            body.setPhone(phone == null ? "" : phone);
+            body.setHerdImage("");
+
+            if (file_data != null) {
+                // 获取文件名
+                String timeName = TextUtils.getCurrentTime(TextUtils.Format_TIME1);
+                String fileName = String.format("%s_%s", timeName, file_data.getOriginalFilename());
+                System.out.println("新的文件名为：" + fileName);
+
+                // 新增当前日期文件名
+                String timeStr = TextUtils.getCurrentTime(TextUtils.Format_TIME);
+
+                // 文件上传后的路径
+                String filePath = String.format("%s%s/", "/usr/local/include/img/", timeStr);
+
+                // 检测是否存在目录
+                File dest = new File(filePath);
+                if (!dest.getParentFile().exists()) {
+                    dest.getParentFile().mkdirs();
+                }
+
+                try {
+                    TextUtils.savePic(file_data.getInputStream(), fileName, filePath);
+                    //映射后可访问得路径
+                    String imageUrl = String.format("%s%s/%s", "http://8.136.210.1:8080/pic/img/", timeStr, fileName);
+                    System.out.println(imageUrl);
+                    body.setHerdImage(imageUrl);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return new Response<>(true, "修改失败", -101, Collections.emptyMap());
+                }
+            }
+
+            //返回数据 并保存值到数据库
+            int count = service.updateHerd(body);
+            System.out.println(count);
+            if (count > 0) {
+                return new Response<>(true, "修改成功", 200, body);
+            } else {
+                return new Response<>(true, "修改失败", -102, Collections.emptyMap());
+            }
+        } catch (Exception e) {
+            return new Response<>(true, "修改失败", -103, Collections.emptyMap());
+        }
+
+    }
+
 
 }
