@@ -166,7 +166,7 @@ public class UserController {
                                             @RequestParam("pageSize") Integer pageSize,
                                             @Param("username") String username) {
         PageHelper.startPage(pageNum, pageSize);
-        List<User> users = service.getUserPageList(username);
+        List<User> users = service.getUserPageList(username == null ? "" : username);
 
         // 组装分页数据，主要包含分页列表数据及总记录数
         Map<String, Object> map = new HashMap<>();
