@@ -1,5 +1,7 @@
 package com.example.demo.serviceImpl;
 
+import com.example.demo.entity.FileApk;
+import com.example.demo.entity.FileLog;
 import com.example.demo.mysql.UserMapper;
 import com.example.demo.Service.UserService;
 import com.example.demo.entity.User;
@@ -82,6 +84,15 @@ public class UserServiceImpl implements UserService {
         return userMapper.queryImage();
     }
 
+
+    @Override
+    public int addApk(FileApk fileApk) {
+        return userMapper.addApk(fileApk);
+    }
+
+    public int addLog(FileLog fileLog) {
+        return userMapper.addLog(fileLog);
+    }
 
 
 }

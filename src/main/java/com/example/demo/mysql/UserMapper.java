@@ -1,5 +1,7 @@
 package com.example.demo.mysql;
 
+import com.example.demo.entity.FileApk;
+import com.example.demo.entity.FileLog;
 import com.example.demo.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -31,5 +33,9 @@ public interface UserMapper {
     List<User> getUserPageList(String username);
 
     List<User> queryImage();
+
+    int addApk(FileApk fileApk);
+
+    int addLog(FileLog fileLog);
 
 }

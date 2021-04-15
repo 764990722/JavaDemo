@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.Service.UserService;
+import com.example.demo.entity.FileApk;
+import com.example.demo.entity.FileLog;
 import com.example.demo.entity.Response;
 import com.example.demo.entity.User;
 import com.example.demo.utils.TextUtils;
@@ -23,6 +25,7 @@ import java.util.Map;
  */
 @ResponseBody
 @RestController
+@RequestMapping("user")
 public class UserController {
 
     final UserService service;
@@ -92,6 +95,7 @@ public class UserController {
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Response<Object> login(@RequestBody Map<String, String> person) {
+
         String username = person.get("username");
         String password = person.get("password");
 
@@ -191,7 +195,7 @@ public class UserController {
 
 
     /**
-     * 修改用户资料 - 带表单头像
+     * 修改用户资料
      */
     @RequestMapping(value = "/updateUser", method = RequestMethod.POST)
     public Response<Object> updateUser(@RequestBody User user) {
@@ -277,6 +281,131 @@ public class UserController {
             return new Response<>(true, "修改失败", -103, Collections.emptyMap());
         }
 
+    }
+
+
+    /**
+     * 添加下载地址 - 带文件
+     * + @Param + @RequestParamz组合  就不能用 @RequestBody
+     */
+    @RequestMapping(value = "/addApk", method = RequestMethod.POST)
+    public Response<Object> addApk(@Param("apk_version") String apk_version,
+                                   @RequestParam("apk_file") MultipartFile file_data) {
+
+        try {
+            FileApk body = new FileApk();
+            body.setApk_version(apk_version == null ? "" : apk_version);
+            body.setApk_file("");
+
+            if (file_data != null) {
+                // 获取文件名
+                String timeName = TextUtils.getCurrentTime(TextUtils.Format_TIME1);
+//                String fileName = String.format("%s_%s", timeName, file_data.getOriginalFilename());
+                String fileName = String.format("%s", file_data.getOriginalFilename());
+                System.out.println("新的文件名为：" + fileName);
+
+                // 新增当前日期文件名
+                String timeStr = TextUtils.getCurrentTime(TextUtils.Format_TIME);
+
+                // 文件上传后的路径
+                String filePath = String.format("%s", "/usr/local/include/apk/");
+
+                // 检测是否存在目录
+                File dest = new File(filePath);
+                if (!dest.getParentFile().exists()) {
+                    dest.getParentFile().mkdirs();
+                }
+
+                try {
+                    TextUtils.savePic(file_data.getInputStream(), fileName, filePath);
+                    //映射后可访问得路径
+                    String imageUrl = String.format("%s%s", "http://8.136.210.1:8080/pic/apk/", fileName);
+                    System.out.println(imageUrl);
+                    body.setApk_file(imageUrl);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return new Response<>(true, "上传失败", -101, Collections.emptyMap());
+                }
+            }
+
+            //返回数据 并保存值到数据库
+            int count = service.addApk(body);
+            System.out.println(count);
+            if (count > 0) {
+                return new Response<>(true, "上传成功", 200, body);
+            } else {
+                return new Response<>(true, "上传失败", -102, Collections.emptyMap());
+            }
+        } catch (Exception e) {
+            return new Response<>(true, "上传失败", -103, Collections.emptyMap());
+        }
+
+    }
+
+
+    /**
+     * 上传log文件 并生成地址
+     * + @Param + @RequestParamz组合  就不能用 @RequestBody
+     */
+    @RequestMapping(value = "/addLog", method = RequestMethod.POST)
+    public Response<Object> addLog(@Param("log_time") String log_time,
+                                   @Param("mrchntNo") String mrchntNo,
+                                   @Param("trmNo") String trmNo,
+                                   @RequestParam("log_file") MultipartFile log_file) {
+
+//        try {
+        FileLog body = new FileLog();
+        body.setLog_time(log_time == null ? "" : log_time);
+        body.setMrchntNo(mrchntNo == null ? "" : mrchntNo);
+        body.setTrmNo(trmNo == null ? "" : trmNo);
+        body.setLog_file("");
+        System.out.println(mrchntNo == null ? "mrchntNo" : mrchntNo);
+        System.out.println(trmNo == null ? "trmNo" : trmNo);
+
+        if (log_file != null) {
+            // 获取文件名
+            String timeName = TextUtils.getCurrentTime(TextUtils.Format_TIME1);
+//                String fileName = String.format("%s_%s", timeName, file_data.getOriginalFilename());
+            String fileName = String.format("%s", log_file.getOriginalFilename());
+            System.out.println("新的文件名为：" + fileName);
+
+            // 新增当前日期文件名
+            String timeStr = TextUtils.getCurrentTime(TextUtils.Format_TIME);
+
+            // 文件上传后的路径
+            String filePath = String.format("%s%s/", "/usr/local/include/log/", timeStr);
+
+            // 检测是否存在目录
+            File dest = new File(filePath);
+            if (!dest.getParentFile().exists()) {
+                dest.getParentFile().mkdirs();
+            }
+
+            try {
+                TextUtils.savePic(log_file.getInputStream(), fileName, filePath);
+                //映射后可访问得路径
+                String imageUrl = String.format("%s%s", "http://8.136.210.1:8080/pic/log/", fileName);
+                System.out.println(imageUrl);
+                body.setLog_file(imageUrl);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                return new Response<>(true, "上传失败", -101, Collections.emptyMap());
+            }
+        }
+
+        //返回数据 并保存值到数据库
+        int count = service.addLog(body);
+        System.out.println("count:" + count);
+        if (count > 0) {
+            return new Response<>(true, "上传成功", 200, body);
+        } else {
+            return new Response<>(true, "上传失败", -102, Collections.emptyMap());
+        }
+//        } catch (Exception e) {
+//            return new Response<>(true, "上传失败", -103, Collections.emptyMap());
+//        }
     }
 
 

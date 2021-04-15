@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.mysql.UserMapper">
+    <!--  User数据模型  -->
     <resultMap id="BaseResultMap" type="com.example.demo.entity.User">
         <result column="id" jdbcType="INTEGER" property="id"/>
         <result column="username" jdbcType="VARCHAR" property="username"/>
@@ -71,6 +72,16 @@
     <select id="getUserPageList" resultMap="BaseResultMap">
         select * from `user` WHERE username LIKE CONCAT('%',#{username,jdbcType=VARCHAR},'%')
     </select>
+
+    <!--  apk管理 插入数据  -->
+    <insert id="addApk" parameterType="com.example.demo.entity.FileApk">
+        INSERT INTO `file_apk` VALUES (#{id},#{apk_file}, #{apk_version})
+    </insert>
+
+    <!--  log管理 插入数据  -->
+    <insert id="addLog" parameterType="com.example.demo.entity.FileLog">
+        INSERT INTO `file_log` VALUES (#{id}, #{log_time},#{log_file}, #{mrchntNo},#{trmNo})
+    </insert>
 
 
 </mapper>

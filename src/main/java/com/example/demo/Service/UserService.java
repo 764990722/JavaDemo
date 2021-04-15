@@ -1,5 +1,7 @@
 package com.example.demo.Service;
 
+import com.example.demo.entity.FileApk;
+import com.example.demo.entity.FileLog;
 import com.example.demo.entity.User;
 import org.apache.ibatis.annotations.Param;
 
@@ -28,6 +30,10 @@ public interface UserService {
     List<User> getUserPageList(String username);//分页，模糊查询查询用户
 
     List<User> queryImage();//查询全部用户
+
+    int addApk(FileApk fileApk);//添加下载版本
+
+    int addLog(FileLog fileLog);//添加下载log
 
 
 }
