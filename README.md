@@ -1,7 +1,7 @@
 
 ## 实战Java接口学习之路
 
-## 需要用到mysql  8.0.22 winx64安装配置方法图文 教程地址：http://note.youdao.com/noteshare?id=bc87cf96e09dbeaeba6ca094591da455
+## 需要用到mysql  8.0.22 winx64安装配置方法图文 教程地址：[http://note.youdao.com/noteshare?id=bc87cf96e09dbeaeba6ca094591da455](https://blog.csdn.net/qq_30998053/article/details/113974309?spm=1001.2014.3001.5501)
 ## MyBatis-Plus官网  https://baomidou.com/#/
 ## 参考学习博客，在此感谢：https://blog.csdn.net/weixin_44135121/category_9285585.html
 
